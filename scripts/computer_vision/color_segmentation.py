@@ -84,7 +84,7 @@ def transform_image(img):
     # dark_orange = (45, 220, 200) #H,S,V (50, 255, 255)
 
     light_orange = (10, 110, 120) #H,S,V (0, 210, 170)
-    dark_orange = (45, 255, 255) #H,S,V (50, 255, 255)
+    dark_orange = (45, 220, 200) #H,S,V (50, 255, 255)
     mask = cv2.inRange(img_hsv, light_orange, dark_orange)
     img = cv2.bitwise_and(img_hsv, img_hsv, mask=mask)
     # plt.figure()
