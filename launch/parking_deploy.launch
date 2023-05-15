@@ -10,7 +10,7 @@
   <node pkg="visual_servoing" name="cone_detector" type="cone_detector.py" output="screen">
   </node>
 
-  <node pkg="visual_servoing" name="pure_pursuit" type="pure_pursuit.py" output="screen">
+  <node pkg="visual_servoing" name="pure_pursuit" type="pure_pursuit2.py" output="screen">
   </node>
 
   <!-- <node pkg="final23" name="homography_transformer" type="homography_transformer.py" output="screen">

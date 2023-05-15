@@ -48,19 +48,24 @@ class ConeDetector():
         image = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
         img = transform_image(image)
         img, lines, found = cd_color_segmentation(img,'')
+
         if len(lines) == 0:
-            float_array_msg0 = Float32MultiArray()
-            rospy.logerr("no lines found :(())")
-            float_array_msg0.data = [np.inf, np.inf, np.inf, np.inf]
-            self.linepub.publish(float_array_msg0)
-        else:
-            float_array_msg = Float32MultiArray()
-            if(len(lines) > 1):
-                rospy.logerr("multiple lines taking first lol")
-            lines = lines[-1]
-            rospy.logerr("x1{}y1{}x2{}y2".format(lines[0], lines[1], lines[2], lines[3]))
-            float_array_msg.data = [lines[0], lines[1], lines[2], lines[3]]
-            self.linepub.publish(float_array_msg)
+            if lines == []:
+                trans = transform_image(img, (10, 130, 70), (50, 210, 120))
+                img, lines, found = cd_color_segmentation(trans, '', second_try=True)
+            if(len(lines) == []):
+                float_array_msg0 = Float32MultiArray()
+                rospy.logerr("no lines found :(())")
+                float_array_msg0.data = [np.inf, np.inf, np.inf, np.inf]
+                self.linepub.publish(float_array_msg0)
+            else:
+                float_array_msg = Float32MultiArray()
+                if(len(lines) > 1):
+                    rospy.logerr("multiple lines taking first lol")
+                lines = lines[-1]
+                rospy.logerr("x1{}y1{}x2{}y2".format(lines[0], lines[1], lines[2], lines[3]))
+                float_array_msg.data = [lines[0], lines[1], lines[2], lines[3]]
+                self.linepub.publish(float_array_msg)
         
         debug_msg = self.bridge.cv2_to_imgmsg(img, "bgr8")
         self.debug_pub.publish(debug_msg)

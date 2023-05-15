@@ -34,15 +34,23 @@ class PurePursuit(object):
         else:
             self.pressed = False
 
-    def line_callback(self, msg):
+    def line_callback(self, msg):        
         x1 = msg.data[0]
         y1 = msg.data[1]
         x2 = msg.data[2]
         y2 = msg.data[3]
-        carx1, cary1, carx2, cary2 = y1, x1, y2, x2
-        goalx = (carx1*1.0 + carx2*1.0) / 2
-        goaly = (cary1*1.0 + cary2*1.0) / 2
-        self.drive_command(goalx, goaly)
+
+        if self.y2 == np.inf or self.y1 == np.inf:
+            AckermannDrive = AckermannDriveStamped()
+            AckermannDrive.header.stamp = rospy.Time.now()
+            AckermannDrive.header.frame_id = "base_link"
+            AckermannDrive.drive.speed = 0.0
+            self.drive_pub.publish(AckermannDrive)
+        else:
+            carx1, cary1, carx2, cary2 = y1, x1, y2, x2
+            goalx = (carx1*1.0 + carx2*1.0) / 2
+            goaly = (cary1*1.0 + cary2*1.0) / 2
+            self.drive_command(goalx, goaly)
 
     def drive_command(self, goalx, goaly):
         eta = np.arctan2(goaly, goalx)
